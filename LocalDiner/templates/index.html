@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+
+<!-- A really basic homepage. You may want to look at Bootstrap CSS examples to customize your own app! -->
+
+<!-- your CSS goes between <style> </style> -->
+<style>
+
+body{
+ background-image: url("/static/img/background1.jpg");
+ background-color: #cccccc;
+ background-position: center center;
+ color: black;
+ }
+
+ .main {
+ background-color: rgba(255, 255, 255, 0);
+ margin-top: 100px;
+ padding-bottom: 50px;
+ padding-left: 50px;
+ padding-right:50px;
+
+ 
+ }
+ .main h1 {
+ font-size: 3.5em;
+ font-family: Arial;
+ color: #ffffff;
+     text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; 
+ }
+ .main h2 {
+ font-size: 2em;
+ font-family: Arial;
+ color: #ffffff;
+ }
+ .main h3 {
+ font-size: 2em;
+ font-family: Arial;
+ color: #ffffff;
+     text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; 
+ }
+ .main p {
+ font-size:1em;
+ font-family: Arial;
+ color: #ffffff;
+ }
+ 
+#text {
+    padding: 5px;
+}
+
+.label { width: 200px; float: left; margin: 20px 20px 0 0}
+.span { display: block; margin: 0 0 20px; font-size: 1.2em; font-weight: bold; }
+.input { width: 200px; border: 1px solid #000; padding: 5px; }
+.button { width: 50px; border: 1px solid #000; padding: 10px; }
+
+
+.search{
+width: 500px;
+/*   border: 5px solid black; */
+  padding: 25px;
+/*   margin: 25px; */
+  background: rgba(255,255,255,0.90);
+  text-align: center;
+  display: inline-block;
+  
+  }
+
+</style>
+
+
+
+<div class="overlay">
+
+</div>
+
+
+
+
+<title>NeighborhoodJoints</title>
+</head>
+<body>
+    <div class="main">
+      <div style="text-align:center">
+      <br><br>
+      <div class="starter-template">
+        <h1>LocalDiner</h1>
+        <h3>Find local treasures that neighbors rave about</h3>
+        <br><br>
+     
+
+<div class="search">
+<!-- This sends user to results page   -->
+<form action='/results', method='POST'>
+  <label for="venue_type"'>
+    <span id='text'>Looking for</span>
+    <input class="input" type="text" name="venue_type">
+  </label>
+
+  <label for="location">
+    <span id='text'> in </span>
+    <select name="location" id="location" class="selectpicker form-control">
+      <option selected="selected" value="location_NYC">New York City</option></select>
+  </label>
+
+  <label for="button"><button type="submit">Find</button></label>
+</form>  
+</div>
+
+
+ </div>
+      <br><br><br>
+
+
+    </div>
+    </div>
+  </body>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+
+  
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>   
+    <!-- styles -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> -->
+
+
+  
+    <style>
+       /* Set the size of the div element that contains the map */
+
+
+body{
+ background-image: url("/static/img/background1.jpg");
+ background-color: #cccccc;
+ background-position: center center;
+ color: black;
+ 
+ }
+       
+       
+        .main {
+        
+ }
+ 
+ 
+         .bundle {
+/*  background-color: rgba(255, 255, 255, 0.9); */
+  width: 1100px;
+  position: relative;
+  left: 50%;
+/*   -webkit-transform: translate(-50%, -10%); */
+  transform: translate(-50%, 0);
+/* width: 70%; */
+text-align: center;
+
+ }
+       
+       
+.results {width: 380px; overflow-y: scroll; height:550px;
+background-color: rgba(255, 255, 255, 0.95);
+display:inline-block; margin: 10px 5px 10px 0px;}
+
+
+
+#map {width: 700px; height:550px; background-color: white;display:inline-block;margin: 10px 5px 10px 5px;}
+       
+  .main h1 {
+ font-size: 5em;
+ font-family: Arial;
+ color: #ffffff;
+     text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; 
+text-align: left
+ }
+ 
+   .main h2 {
+ font-size: 1em;
+ font-family: Arial;
+ color: #ff0000;
+text-align: left;
+font-weight: bold;
+margin: 10px;
+
+ }
+ 
+    .main h3 {
+ font-size: 1em;
+ font-family: Arial;
+ color: #000000;
+text-align: left;
+font-weight: bold;
+margin: 10px;
+
+ }
+ 
+    .main h4 {
+ font-size: 1.2em;
+ font-family: Arial;
+ color: #d4af37;
+text-align: left;
+font-weight: bold;
+margin: 10px;
+
+ }
+ 
+    li {
+ font-size: 1em;
+ font-family: Arial;
+ color: #000000;
+text-align: left;
+margin: 10px;
+
+ }
+   
+   
+   ul {
+  width: 380px;
+}
+/* 
+li {
+    padding-left: 1.28571429em;
+    text-indent: -1.28571429em;
+}
+ */
+   
+   
+       
+    </style>
+  </head>
+  <body>
+
+  <div class="main">
+  
+  
+    <div class = 'bundle'>
+  
+  <div class='banner'>
+  <h1>LocalDiner</h1>
+  
+  
+  </div>
+
+
+<div class = 'results'>
+
+<h2>Here are {{num_hits}} local {{venue_cats}} in {{venue_location}}:</h2>
+
+<ul class="list-group" id="results-list">
+
+
+
+    </ul>
+</div>
+
+
+
+
+    <div id="map"></div>
+    <script>
+    
+    
+    
+var map;
+var coordAddresses = 'api/coordinates';
+var locations = [];
+function initMap() {
+
+var originalMapCenter = new google.maps.LatLng({{venue_loc[0]}},{{venue_loc[1]}});
+
+map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 10,
+  center: originalMapCenter,
+  mapTypeId: 'roadmap'
+});
+
+// #####################################
+// load data for markers
+// #####################################
+
+
+
+var mapBounds = map.getBounds();
+google.maps.event.addListenerOnce( map, 'idle',
+
+
+function() {
+
+// #####################################
+// handle changing bounds
+// #####################################
+
+
+  
+map.addListener('bounds_changed', function() {
+  mapBounds = map.getBounds();
+  drawMarkers()
+   
+});
+
+
+
+
+
+});
+
+
+
+
+   fetch(coordAddresses)
+.then(function(response) {
+ return response.text();
+ }).then(function(body) {
+ var obj = JSON.parse(body);
+ var myAdd = {};
+ var addresses = obj.coordinates;
+ var l = addresses.length;
+ for (i = 0; i < l; i++) {
+ myAdd = {
+      position: {
+          lat: parseFloat(obj.coordinates[i].lat),
+          lng: parseFloat(obj.coordinates[i].lng)
+                },
+        lat: parseFloat(obj.coordinates[i].lat),
+          lng: parseFloat(obj.coordinates[i].lng), 
+          name: obj.coordinates[i].name,
+          text: obj.coordinates[i].text,
+           };
+ locations.push(myAdd);
+}
+
+mapBounds = map.getBounds();
+  drawMarkers()
+
+})
+
+
+
+
+
+
+
+
+
+
+var pt;
+var maxPts = 10;
+
+function drawMarkers(){
+
+
+// #####################################
+// draw markers and infowindows
+// #####################################
+
+// Display multiple markers on a map
+var infoWindow = new google.maps.InfoWindow(), marker, i;
+
+var i = 0;
+var countPts = 0;
+var all_markers = [];
+
+$("#results-list").empty();
+
+// Loop through our array of markers & place each one on the map 
+while(countPts < maxPts) { 
+
+pt = locations[i].position;
+    
+if (mapBounds.contains(pt)){
+
+countPts = countPts + 1;
+
+        marker = new google.maps.Marker({
+            position: locations[i].position,
+            map: map,
+            title: locations[i].cat,
+            content: locations[i].name,
+        });
+        all_markers.push(marker);
+        
+        if ( 0 === $( '#map-marker-' + i ).length ) {
+
+        $( '#results-list' ).append(
+          $( '<li />' )
+           .attr( 'id', 'map-marker-' + i )
+           .attr( 'class', 'list-group-item' )
+           .html(locations[i].text)
+        );
+
+      }
+      
+          $('.list-group li').click(function(e) {
+        e.preventDefault()
+        
+        $that = $(this);
+        
+        $that.parent().find('li').removeClass('active');
+        $that.addClass('active');
+    });
+        
+        
+        // Allow each marker to have an info window    
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infoWindow.setContent(locations[i].text);
+                infoWindow.open(map, marker);
+            }
+        })(marker, i));
+       
+       
+    google.maps.event.addListener(map, 'click', function() {
+    infoWindow.close();
+    });
+
+           }
+  
+  i = i + 1;
+  
+    }
+        
+    
+};
+
+}
+   
+      
+    </script>
+    
+    
+        <script src="https://maps.googleapis.com/maps/api/js?key={{context.key}}&callback=initMap">
+    </script>
+    
+    </div>
+  </div>  
+  </body>
+</html>
