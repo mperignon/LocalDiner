@@ -1,3 +1,4 @@
 LocalDiner/__pycache__/
 instance/
 tmp/
+*.pyc
