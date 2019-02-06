@@ -20,7 +20,7 @@ CREATE TABLE venues(
     display_phone text,
     id text,
     rating float,
-    review_count integer,
+    review_count float,
     cats text
 )
 """)
