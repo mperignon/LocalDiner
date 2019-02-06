@@ -1,6 +1,6 @@
 import psycopg2
 
-conn = psycopg2.connect("host=localhost dbname=postgres user=postgres")
+conn = psycopg2.connect("host=localhost dbname=ubuntu user=ubuntu")
 
 
 
