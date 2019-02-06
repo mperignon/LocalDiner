@@ -7,6 +7,7 @@ conn = psycopg2.connect("host=localhost dbname=ubuntu user=ubuntu password=ubunt
 cur = conn.cursor()
 cur.execute("""
 CREATE TABLE venues(
+    index integer,
     url text PRIMARY KEY,
     prediction float,
     count integer,
