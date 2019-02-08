@@ -114,10 +114,10 @@ def coordinates():
         if rating != int(rating):
             rating = int(rating)
             half = '_half'
-        star_filename = 'LocalDiner/static/img/yelp_stars/small_' + str(int(rating)) + half + ".png"
+        star_filename = '../static/img/yelp_stars/small_' + str(int(rating)) + half + ".png"
         
         
-        pie_filename = 'LocalDiner/static/img/pies/' + str(venues_in_cat.iloc[i]['img'])
+        pie_filename = '../static/img/pies/' + str(venues_in_cat.iloc[i]['img'])
         
         
     
