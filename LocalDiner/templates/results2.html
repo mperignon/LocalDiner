@@ -27,35 +27,38 @@
        /* Set the size of the div element that contains the map */
 
 
-body{
- background-image: url("/static/img/background1.jpg");
- background-color: rgba(0,255, 0, 0.95);
- background-position: center center;
- color: black;
+.wrapper{
+/*  background-image: url("/static/img/background1.jpg")  !important; */
+/*  background-position: center center; */
+background-color: rgba(0, 0, 255, 0.95);
  
  }
        
-       
+
+ 
 .main {
-        
- }
- 
- 
-         .bundle {
-/*  background-color: rgba(255, 255, 255, 0.9); */
-  width: 1100px;
+background-image: url("/static/img/background1.jpg");
+background-position: center center;
+  width: 90%;
+  max-width: 1620px;
+  min-width: 1140px;
+  max-height: 1080px;
   position: relative;
   left: 50%;
-/*   -webkit-transform: translate(-50%, -10%); */
   transform: translate(-50%, 0);
-/* width: 240px; */
 text-align: center;
 
  }
+ 
+.banner {
+width: 1100px;
+display:inline-block; 
+
+}
        
        
 .results {width: 380px; overflow-y: scroll; height:550px;
-background-color: rgba(255, 0, 0, 0.95);
+background-color: rgba(255, 255, 255, 0.95);
 display:inline-block; margin: 10px 5px 10px 0px;}
 
 
@@ -96,6 +99,7 @@ margin: 10px;
 
  }
  
+ */
    
    ul {
   width: 380px;
@@ -114,10 +118,8 @@ margin: 10px;
 </head>
 <body>
 
-  <div class="main">
   
-  
-    <div class = 'bundle'>
+    <div class = 'main'>
   
   <div class='banner'>
   <h1>LocalDiner</h1>
@@ -128,7 +130,7 @@ margin: 10px;
 
 <div class = 'results'>
 
-<h2>Here are {{num_hits}} local {{venue_cats}} in {{venue_location}}:</h2>
+<h4>Here are 10 local {{venue_cats}} in {{venue_location}}:</h4>
 
 <div class="list-group" id="results-list">
 
@@ -567,8 +569,6 @@ function drawMarkers() {
   
 <script src="https://maps.googleapis.com/maps/api/js?key={{context.key}}&callback=initMap">
 </script>
-    
-      </div>
   </div> 
   
 </body>
