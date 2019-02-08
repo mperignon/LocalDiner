@@ -19,8 +19,11 @@ import pandas as pd
 dbname = 'ubuntu'
 username = 'ubuntu' # change this to your username
 password = 'ubuntu'
+host = 'localhost'
+port     = '5432' 
 
-engine = create_engine('postgres://%s@localhost/%s'%(username,dbname))
+engine = create_engine('postgresql://{}:{}@{}:{}/{}'.format(username, password, host, port, dbname))
+
 
 con = None
 con = psycopg2.connect(database = dbname, user = username, password = password)
