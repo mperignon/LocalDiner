@@ -8,13 +8,13 @@ cur = conn.cursor()
 
 
 cur.execute("""
-DROP TABLE IF EXISTS venues;
+DROP TABLE IF EXISTS venues2;
 """)
 conn.commit()
 
 
 cur.execute("""
-CREATE TABLE venues(
+CREATE TABLE venues2(
     index integer,
     url text PRIMARY KEY,
     prediction float,
@@ -24,12 +24,12 @@ CREATE TABLE venues(
     name text,
     price integer,
     clean_address text,
-    categories text,
     display_phone text,
     id text,
     rating float,
     review_count float,
-    cats text
+    cats text,
+    img text
 )
 """)
 conn.commit()
