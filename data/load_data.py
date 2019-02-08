@@ -5,6 +5,14 @@ conn = psycopg2.connect("host=localhost dbname=ubuntu user=ubuntu password=ubunt
 
 
 cur = conn.cursor()
+
+
+cur.execute("""
+DROP TABLE IF EXISTS venues2;
+""")
+conn.commit()
+
+
 cur.execute("""
 CREATE TABLE venues(
     index integer,
