@@ -86,7 +86,7 @@ width: 500px;
 
 
 
-<title>NeighborhoodJoints</title>
+<title>LocalDiner</title>
 </head>
 <body>
     <div class="main">
@@ -101,16 +101,22 @@ width: 500px;
 <div class="search">
 <!-- This sends user to results page   -->
 <form action='/results', method='POST'>
+
   <label for="venue_type"'>
     <span id='text'>Looking for</span>
     <input class="input" type="text" name="venue_type">
   </label>
-
+  
+  
+  
   <label for="location">
     <span id='text'> in </span>
     <select name="location" id="location" class="selectpicker form-control">
       <option selected="selected" value="location_NYC">New York City</option></select>
   </label>
+
+
+
 
   <label for="button"><button type="submit">Find</button></label>
 </form>  

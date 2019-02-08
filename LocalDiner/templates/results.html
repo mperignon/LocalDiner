@@ -106,12 +106,7 @@ margin: 10px;
    ul {
   width: 380px;
 }
-/* 
-li {
-    padding-left: 1.28571429em;
-    text-indent: -1.28571429em;
-}
- */
+
    
    
        
@@ -135,7 +130,7 @@ li {
 
 <h2>Here are {{num_hits}} local {{venue_cats}} in {{venue_location}}:</h2>
 
-<ul class="list-group" id="results-list">
+    <ul class="list-group" id="results-list" list-group-flush>
 
 
 
@@ -145,8 +140,8 @@ li {
 
 
 
-    <div id="map"></div>
-    <script>
+<div id="map"></div>
+<script>
     
     
     
@@ -157,39 +152,33 @@ function initMap() {
 
 var originalMapCenter = new google.maps.LatLng({{venue_loc[0]}},{{venue_loc[1]}});
 
+
 map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 10,
-  center: originalMapCenter,
-  mapTypeId: 'roadmap'
+    zoom: 10,
+    center: originalMapCenter,
+    mapTypeId: 'roadmap'
 });
+
+
+
 
 // #####################################
 // load data for markers
 // #####################################
 
-
-
 var mapBounds = map.getBounds();
-google.maps.event.addListenerOnce( map, 'idle',
 
+google.maps.event.addListenerOnce( map, 'idle', function() {
 
-function() {
+        // #####################################
+        // handle changing bounds
+        // #####################################
 
-// #####################################
-// handle changing bounds
-// #####################################
-
-
-  
-map.addListener('bounds_changed', function() {
-  mapBounds = map.getBounds();
-  drawMarkers()
+        map.addListener('bounds_changed', function() {
+          mapBounds = map.getBounds();
+          drawMarkers()
    
-});
-
-
-
-
+    });
 
 });
 
@@ -199,34 +188,38 @@ map.addListener('bounds_changed', function() {
 fetch(coordAddresses)
 .then(function(response) {
 
- return response.text();
+    return response.text();
  
  }).then(function(body) {
  
- var obj = JSON.parse(body);
- var myAdd = {};
- var addresses = obj.coordinates;
- var l = addresses.length;
- for (i = 0; i < l; i++) {
  
- myAdd = {
-      position: {
-          lat: parseFloat(obj.coordinates[i].lat),
-          lng: parseFloat(obj.coordinates[i].lng)
-                },
+     var obj = JSON.parse(body);
+     var myAdd = {};
+     var addresses = obj.coordinates;
+     var l = addresses.length;
+ 
+     for (i = 0; i < l; i++) {
+ 
+            myAdd = {
+                  position: {
+                      lat: parseFloat(obj.coordinates[i].lat),
+                      lng: parseFloat(obj.coordinates[i].lng)
+                            },
                 
-          lat: parseFloat(obj.coordinates[i].lat),
-          lng: parseFloat(obj.coordinates[i].lng), 
-          name: obj.coordinates[i].name,
-          text: obj.coordinates[i].text,
+                      lat: parseFloat(obj.coordinates[i].lat),
+                      lng: parseFloat(obj.coordinates[i].lng), 
+                      name: obj.coordinates[i].name,
+                      text: obj.coordinates[i].text,
           
           
-           };
- locations.push(myAdd);
-}
+                       };
+           
+             locations.push(myAdd);
+            }
 
-mapBounds = map.getBounds();
-  drawMarkers()
+    mapBounds = map.getBounds();
+
+    drawMarkers()
 
 })
 
@@ -245,73 +238,74 @@ var maxPts = 10;
 function drawMarkers(){
 
 
-// #####################################
-// draw markers and infowindows
-// #####################################
+    // #####################################
+    // draw markers and infowindows
+    // #####################################
 
-// Display multiple markers on a map
-var infoWindow = new google.maps.InfoWindow(), marker, i;
+    // Display multiple markers on a map
+    var infoWindow = new google.maps.InfoWindow(), marker, i;
 
-var i = 0;
-var countPts = 0;
-var all_markers = [];
+    var i = 0;
+    var countPts = 0;
+    var all_markers = [];
 
-$("#results-list").empty();
+    $("#results-list").empty();
 
-// Loop through our array of markers & place each one on the map 
-while(countPts < maxPts) { 
+    // Loop through our array of markers & place each one on the map 
+    while(countPts < maxPts) { 
 
-pt = locations[i].position;
+        pt = locations[i].position;
     
-if (mapBounds.contains(pt)){
+        if (mapBounds.contains(pt)){
 
-countPts = countPts + 1;
+            countPts = countPts + 1;
 
-        marker = new google.maps.Marker({
-            position: locations[i].position,
-            map: map,
-            title: locations[i].cat,
-            content: locations[i].name,
-        });
-        all_markers.push(marker);
+            marker = new google.maps.Marker({
+                position: locations[i].position,
+                map: map,
+                title: locations[i].cat,
+                content: locations[i].name,
+                });
+                
+            all_markers.push(marker);
         
-        if ( 0 === $( '#map-marker-' + i ).length ) {
+            if ( 0 === $( '#map-marker-' + i ).length ) {
 
-        $( '#results-list' ).append(
-          $( '<li />' )
-           .attr( 'id', 'map-marker-' + i )
-           .attr( 'class', 'list-group-item' )
-           .html(locations[i].text)
-        );
+                $( '#results-list' ).append(
+                  $( '<li />' )
+                   .attr( 'id', 'map-marker-' + i )
+                   .attr( 'class', 'list-group-item' )
+                   .html(locations[i].text)
+                );
 
-      }
-      
-          $('.list-group li').click(function(e) {
-        e.preventDefault()
-        
-        $that = $(this);
-        
-        $that.parent().find('li').removeClass('active');
-        $that.addClass('active');
-    });
-        
-        
-        // Allow each marker to have an info window    
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                infoWindow.setContent(locations[i].text);
-                infoWindow.open(map, marker);
             }
-        })(marker, i));
+      
+            $('.list-group li').click(function(e) {
+                e.preventDefault()
+    
+                $that = $(this);
+    
+                $that.parent().find('li').removeClass('active');
+                $that.addClass('active');
+            });
+        
+        
+            // Allow each marker to have an info window    
+            google.maps.event.addListener(marker,'click',(function(marker, i) {
+                return function() {
+                    infoWindow.setContent(locations[i].text);
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
        
        
-    google.maps.event.addListener(map, 'click', function() {
-    infoWindow.close();
-    });
+            google.maps.event.addListener(map, 'click', function() {
+            infoWindow.close();
+            });
 
-           }
+        }
   
-  i = i + 1;
+        i = i + 1;
   
     }
         
@@ -324,8 +318,8 @@ countPts = countPts + 1;
     </script>
     
     
-        <script src="https://maps.googleapis.com/maps/api/js?key={{context.key}}&callback=initMap">
-    </script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{context.key}}&callback=initMap">
+</script>
     
     </div>
   </div>  
