@@ -23,23 +23,7 @@ con = psycopg2.connect(database = dbname, user = username)
 GoogleMaps(app)
 
 
-selected_venue_type = None
-
-###### init ########
-
-# unique_venue_cats = pd.read_sql_query('SELECT DISTINCT venue_cat_name FROM check_ins_table', con)['venue_cat_name']
-# 
-# 
-# venues = pd.read_sql_query('SELECT * FROM venues_table', con)
-# venues['score'] = np.random.rand(len(venues)) * 10
-# venues = venues.sort_values('score', ascending=False)
-# 
-
-venues_details = pd.read_sql_query('SELECT id,name,phone,price,rating,score,lat,lon,url,cats FROM yelp_unique_venue_details', con)
-unique_cats = list(set(', '.join(venues_details['cats'].unique()).split(', ')))
-
-
- 
+venues = pd.read_sql_query('SELECT * FROM venues', con)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -60,48 +44,37 @@ def results():
 
     global venue_cats
     global venue_type
+    global venues_in_cat
+    
     venue_type = request.form.get('venue_type')
     venue_location = request.form.get('location') # not implemented yet
     venue_location = 'New York City'
+
     
     
 
     if (venue_type == None) or (venue_type == ''):
         venue_type = 'Pizza'
+    if (venue_location == None) or (venue_location == ''):
+        venue_location = 'New York City'
+        
+    venue_type = venue_type.split(' ')[0]
+    venue_type_text = venue_type.lower() + ' places'
 
-    venue_cats = [i for i in unique_cats if re.match('.*' + venue_type.lower() + '.*', i.lower())]
-
-    venue_cats_text = venue_cats[0].lower() + ' places'
-
-    cat_venues = pd.DataFrame(columns = venues_details.columns)
-    for vc in venue_cats:
-        cat_venues = pd.concat([cat_venues, venues_details[venues_details['cats'] == vc]])
-
-    cat_venues = cat_venues.sort_values('score', ascending=False)
-
+    inds = [n for n,i in enumerate(venues['cats']) if re.match('.*' + venue_type.lower() + '.*', i.lower())]
+    venues_in_cat = venues.loc[inds].sort_values('prediction',
+                                                 ascending = False)
 
 
 
-    num_hits = len(cat_venues)
-    venues_longitude = cat_venues['lon'].values
-    venues_latitude = cat_venues['lat'].values
+    num_hits = len(venues_in_cat)
+    venues_longitude = venues_in_cat['lon'].values
+    venues_latitude = venues_in_cat['lat'].values
     venue_loc = [venues_latitude.mean(), venues_longitude.mean()]
 
-    all_coords = [] # initialize a list to store your addresses
-    all_text = []
-
-    for i in range(len(cat_venues)):
-    
-        name = cat_venues.iloc[i]['name']
-        url = cat_venues.iloc[i]['url']
-    #     address = cat_venues.iloc[i]['address']
-        price = cat_venues.iloc[i]['price']
-        rating = cat_venues.iloc[i]['rating']
-        score = cat_venues.iloc[i]['score']
-        fig = cat_venues.iloc[i]['id']
     
 
-    return render_template('results.html', venue_loc = venue_loc, num_hits = num_hits, venue_cats = venue_cats_text, venue_location = venue_location, all_text = all_text, context=context)
+    return render_template('results.html', venue_loc = venue_loc, num_hits = num_hits, venue_cats = venue_type_text, venue_location = venue_location, context = context)
 
 
 
@@ -118,59 +91,38 @@ def coordinates():
 
     global venue_cats
     global venue_type
+    global venues_in_cat
 
 
+ 
+    all_venue_info = [] # initialize a list to store your addresses
 
-    if (venue_type == None) or (venue_type == ''):
-        venue_type = 'Pizza'
-
-    venue_cats = [i for i in unique_cats if re.match('.*' + venue_type.lower() + '.*', i.lower())]
-
-    venue_cats_text = venue_cats[0].lower() + ' places'
-
-    cat_venues = pd.DataFrame(columns = venues_details.columns)
-    for vc in venue_cats:
-        cat_venues = pd.concat([cat_venues, venues_details[venues_details['cats'] == vc]])
-
-    cat_venues = cat_venues.sort_values('score', ascending=False)
-
-
-
-
-    num_hits = len(cat_venues)
-    venues_longitude = cat_venues['lon'].values
-    venues_latitude = cat_venues['lat'].values
-    venue_loc = [venues_latitude.mean(), venues_longitude.mean()]
-
-    all_coords = [] # initialize a list to store your addresses
-
-    for i in range(len(cat_venues)):
+    for i in range(len(venues_in_cat)):
     
-        name = cat_venues.iloc[i]['name']
-        url = cat_venues.iloc[i]['url']
-    #     address = cat_venues.iloc[i]['address']
-        price = cat_venues.iloc[i]['price']
-        rating = cat_venues.iloc[i]['rating']
-        score = cat_venues.iloc[i]['score']
-    
-    
-        text = "<h4>" + "{:2.1f}".format(score) + '/10</h4><a href="' + url + '"><h3>' + name + "</h3></a>&emsp;" + price + "&emsp;&emsp;" + str(rating) + ' stars'
+        item = {
 
-        address_details = {
-        "lat": cat_venues.iloc[i]['lat'], 
-        "lng": cat_venues.iloc[i]['lon'],
-        "name": name,
-        "text": text}
-        all_coords.append(address_details)
-    
-    
-    
-    return jsonify({'coordinates': all_coords})
+        "name" : venues_in_cat.iloc[i]['name'],
+        "url" : venues_in_cat.iloc[i]['url'],
+        "address" : venues_in_cat.iloc[i]['clean_address'],
+        "price" : venues_in_cat.iloc[i]['price'],
+        "rating" : venues_in_cat.iloc[i]['rating'],
+        "score" : venues_in_cat.iloc[i]['prediction'],
+        "venue_id" : venues_in_cat.iloc[i]['id'],
+        "lat": venues_in_cat.iloc[i]['lat'], 
+        "lng": venues_in_cat.iloc[i]['lon'],
+        
+        }
+        
+        item["text"] =  "<h4>" + "{:2.1f}".format(item['score']) + '/10</h4><a href="' + item['url'] + '"><h3>' + item['name'] + "</h3></a>&emsp;" + str('$' * item['price']) + "&emsp;&emsp;" + str(item['rating']) + ' stars'
 
-
+        
+        
+        
+        all_venue_info.append(item)
 
 
 
+    return jsonify({'coordinates': all_venue_info})
 
 
 

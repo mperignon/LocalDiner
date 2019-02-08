@@ -196,24 +196,31 @@ map.addListener('bounds_changed', function() {
 
 
 
-   fetch(coordAddresses)
+fetch(coordAddresses)
 .then(function(response) {
+
  return response.text();
+ 
  }).then(function(body) {
+ 
  var obj = JSON.parse(body);
  var myAdd = {};
  var addresses = obj.coordinates;
  var l = addresses.length;
  for (i = 0; i < l; i++) {
+ 
  myAdd = {
       position: {
           lat: parseFloat(obj.coordinates[i].lat),
           lng: parseFloat(obj.coordinates[i].lng)
                 },
-        lat: parseFloat(obj.coordinates[i].lat),
+                
+          lat: parseFloat(obj.coordinates[i].lat),
           lng: parseFloat(obj.coordinates[i].lng), 
           name: obj.coordinates[i].name,
           text: obj.coordinates[i].text,
+          
+          
            };
  locations.push(myAdd);
 }
