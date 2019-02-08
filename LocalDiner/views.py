@@ -23,7 +23,7 @@ password = 'ubuntu'
 engine = create_engine('postgres://%s@localhost/%s'%(username,dbname))
 
 con = None
-con = psycopg2.connect(database = dbname, user = username, password = password, host="/tmp/")
+con = psycopg2.connect(database = dbname, user = username, password = password)
 
 
 GoogleMaps(app)
