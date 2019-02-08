@@ -8,7 +8,7 @@ cur = conn.cursor()
 
 
 cur.execute("""
-DROP TABLE IF EXISTS venues2;
+DROP TABLE IF EXISTS venues;
 """)
 conn.commit()
 
