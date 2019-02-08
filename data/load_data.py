@@ -39,6 +39,6 @@ conn.commit()
 with open('venues_with_locality_prediction.csv', 'r') as f:
     # Notice that we don't need the `csv` module.
     next(f)  # Skip the header row.
-    cur.copy_from(f, 'venues', sep=';')
+    cur.copy_from(f, 'venues2', sep=';')
         
 conn.commit()
