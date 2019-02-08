@@ -13,13 +13,17 @@ from sqlalchemy_utils import database_exists, create_database
 import psycopg2
 import pandas as pd
 
-dbname = 'FourSquare'
-username = 'mari' # change this to your username
+# dbname = 'FourSquare'
+# username = 'mari' # change this to your username
+
+dbname = 'ubuntu'
+username = 'ubuntu' # change this to your username
+password = 'ubuntu'
 
 engine = create_engine('postgres://%s@localhost/%s'%(username,dbname))
 
 con = None
-con = psycopg2.connect(database = dbname, user = username)
+con = psycopg2.connect(database = dbname, user = username, password = password)
 
 
 GoogleMaps(app)
