@@ -40,8 +40,10 @@ background-color: rgba(0, 0, 255, 0.95);
 background-image: url("../static/img/background1.jpg");
 background-position: center center;
   width: 90%;
+  height: 90%;
   max-width: 1620px;
   min-width: 1140px;
+  min-height: 900px;
   max-height: 1080px;
   position: relative;
   left: 50%;
@@ -81,13 +83,22 @@ vertical-align: bottom;
 }
        
        
-.results {width: 380px; overflow-y: scroll; height:550px;
+.results {width: 380px;
+overflow-y: scroll;
+min-height:550px;
+max-height: 750px;
 background-color: rgba(255, 255, 255, 0.95);
-display:inline-block; margin: 10px 0px 10px 0px;}
+display:inline-block;
+margin: 10px 0px 10px 0px;}
 
 
 
-#map {width: 700px; height:550px; background-color: white;display:inline-block;margin: 10px 0px 10px 5px;}
+#map {width: 700px;
+height:550px;
+background-color: white;
+display:inline-block;
+vertical-align: top;
+margin: 10px 0px 10px 5px;}
        
   .main h1 {
  font-size: 5em;
