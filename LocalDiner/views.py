@@ -145,7 +145,7 @@ def coordinates():
         
         
         # item["text"] =  "<h4>" + "{:2.1f}".format(item['score']) + '/10</h4><a href="' + item['url'] + '"><h3>' + item['name'] + "</h3></a>&emsp;" + str('$' * item['price'])
-        item["text"] =  "<h4>" + item['name'] + "</h4><h3>" + item['address'] + "</h3><h3>" + item['phone'] + item['score'] + "</h3>"
+        item["text"] =  "<h4>" + item['name'] + "</h4><h3>" + item['address'] + "</h3><h3>" + item['phone'] + "</h3>"
         
         item['text2'] = "<img src='" + item['pie'] + "'><img src='" + item['rating'] + "'>"
 
